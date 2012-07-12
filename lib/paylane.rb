@@ -1,5 +1,5 @@
 require "paylane/version"
 
-module Paylane
+module PayLane
   # Your code goes here...
 end
