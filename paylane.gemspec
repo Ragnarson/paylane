@@ -16,4 +16,5 @@ Gem::Specification.new do |gem|
   gem.version       = PayLane::VERSION
 
   gem.add_dependency "savon"
+  gem.add_development_dependency "vcr"
 end
