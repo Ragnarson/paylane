@@ -1,5 +1,3 @@
 require "paylane/version"
+require "paylane/gateway"
 
-module PayLane
-  # Your code goes here...
-end
