@@ -14,4 +14,6 @@ Gem::Specification.new do |gem|
   gem.name          = "paylane"
   gem.require_paths = ["lib"]
   gem.version       = PayLane::VERSION
+
+  gem.add_dependency "savon"
 end
