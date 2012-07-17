@@ -17,6 +17,13 @@ module PayLane
       end
       response.to_hash[:get_sale_result_response][:response]
     end
+
+    def check_sales(params)
+      response = @client.request(:checkSales) do
+        soap.body = {'check_sales_params' => params}
+      end
+      response.to_hash[:check_sales_response][:check_sales_response]
+    end
   end
 end
 

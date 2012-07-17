@@ -88,5 +88,22 @@ describe PayLane::API do
       pending
     end
   end
+
+  describe '#check_sales' do
+    it 'returns details for requested sale ids' do
+      soap_response = double(
+        to_hash: {check_sales_response: {check_sales_response: {ok: {sale_status: [{id_sale: "1", status: "NOT_FOUND", is_refund: false, is_chargeback: false, is_reversal: false}, {id_sale: "2772323", status: "PERFORMED", is_refund: false, is_chargeback: false, is_reversal: false}]}}}}
+      )
+      @connection.should_receive(:request).with(:checkSales).and_return(soap_response)
+
+      params = {
+        'id_sale_list' => [2772323, 1]
+      }
+
+      sales = @api.check_sales(params)[:ok][:sale_status]
+      sales.should include({id_sale: "1", status: "NOT_FOUND", is_refund: false, is_chargeback: false, is_reversal: false})
+      sales.should include({id_sale: "2772323", status: "PERFORMED", is_refund: false, is_chargeback: false, is_reversal: false})
+    end
+  end
 end
 
