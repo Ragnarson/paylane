@@ -16,7 +16,12 @@ module PayLane
 
     def close_sale_authorization(params)
       do_request(:closeSaleAuthorization, params)
-        .to_hash[:close_sale_authorization][:response]
+        .to_hash[:close_sale_authorization_response][:response]
+    end
+
+    def refund(params)
+      do_request(:refund, params)
+        .to_hash[:refund_response][:response]
     end
 
     def resale(params)

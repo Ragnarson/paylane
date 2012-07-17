@@ -93,6 +93,22 @@ describe PayLane::API do
     end
   end
 
+  describe '#refund' do
+    it 'returns id_refund on successful refund' do
+      mock_api_method(connection, :refund) do
+        {refund_response: {response: {ok: {id_refund: "213871"}}}}
+      end
+
+      params = {
+        'id_sale' => '2772323',
+        'amount' => 9.99,
+        'reason' => 'test_refund_method'
+      }
+
+      api.refund(params).should include({ok: {id_refund: "213871"}})
+    end
+  end
+
   describe '#resale' do
     it 'returns id_sale on successful performed recurring charge' do
       mock_api_method(connection, :resale) do
