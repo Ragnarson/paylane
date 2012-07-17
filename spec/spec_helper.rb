@@ -1,16 +1,13 @@
 require 'paylane'
 require 'fakeweb'
+require 'helpers'
 
 RSpec.configure do |config|
   config.treat_symbols_as_metadata_keys_with_true_values = true
   config.run_all_when_everything_filtered = true
   config.order = 'random'
-  config.before(:suite) do
-    module PublicTestAccount
-      LOGIN = 'paylane_test_public'
-      PASSWORD = 'p2y12n3t3st'
-    end
-  end
+  config.include PublicTestAccount
+  config.include Helpers
 end
 
 FakeWeb.allow_net_connect = false

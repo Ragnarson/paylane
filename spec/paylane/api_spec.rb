@@ -1,17 +1,17 @@
 require 'spec_helper'
 
 describe PayLane::API do
-  before do
-    @connection = PayLane::Gateway.new(PublicTestAccount::LOGIN, PublicTestAccount::PASSWORD).connect
-    @api = PayLane::API.new(@connection)
-  end
+  let(:connection) {
+    gateway = PayLane::Gateway.new(PublicTestAccount::LOGIN, PublicTestAccount::PASSWORD)
+    gateway.connect
+  }
+  let(:api) { PayLane::API.new(connection) }
 
   describe '#multi_sale' do
     it "returns id_sale on successful card charge" do
-      soap_response = double(
-        to_hash: {multi_sale_response: {response: {ok: {id_sale: "2772323"}, data: {fraud_score: "8.76"}}}}
-      )
-      @connection.should_receive(:request).with(:multiSale).and_return(soap_response)
+      mock_api_method(connection, :multiSale) do
+        {multi_sale_response: {response: {ok: {id_sale: "2772323"}, data: {fraud_score: "8.76"}}}}
+      end
 
       params = {
         'payment_method' => {
@@ -42,7 +42,7 @@ describe PayLane::API do
         }
       }
 
-      @api.multi_sale(params).should include({ok: {id_sale: "2772323"}})
+      api.multi_sale(params).should include({ok: {id_sale: "2772323"}})
     end
 
     it "returns id_sale on successful direct debit" do
@@ -56,31 +56,29 @@ describe PayLane::API do
 
   describe '#get_sale_result' do
     it "returns id_sale if find processed sale" do
-      soap_response = double(
-        to_hash: {get_sale_result_response: {response: {ok: {id_sale: "2772323"}}}}
-      )
-      @connection.should_receive(:request).with(:getSaleResult).and_return(soap_response)
+      mock_api_method(connection, :getSaleResult) do
+        {get_sale_result_response: {response: {ok: {id_sale: "2772323"}}}}
+      end
 
       params = {
         'amount' => 9.99,
         'description' => 'paylane_api_test'
       }
 
-      @api.get_sale_result(params).should include({ok: {id_sale: "2772323"}})
+      api.get_sale_result(params).should include({ok: {id_sale: "2772323"}})
     end
 
     it "returns id_sale_error if find processed sale with error" do
-      soap_response = double(
-        to_hash: {get_sale_result_response: {response: {ok: {id_sale_error: "831072"}}}}
-      )
-      @connection.should_receive(:request).with(:getSaleResult).and_return(soap_response)
+      mock_api_method(connection, :getSaleResult) do
+        {get_sale_result_response: {response: {ok: {id_sale_error: "831072"}}}}
+      end
 
       params = {
         'amount' => 9.99,
         'description' => 'paylane_api_test'
       }
 
-      @api.get_sale_result(params).should include({ok: {id_sale_error: "831072"}})
+      api.get_sale_result(params).should include({ok: {id_sale_error: "831072"}})
     end
 
     it "handle errors" do
@@ -90,16 +88,15 @@ describe PayLane::API do
 
   describe '#check_sales' do
     it 'returns details for requested sale ids' do
-      soap_response = double(
-        to_hash: {check_sales_response: {check_sales_response: {ok: {sale_status: [{id_sale: "1", status: "NOT_FOUND", is_refund: false, is_chargeback: false, is_reversal: false}, {id_sale: "2772323", status: "PERFORMED", is_refund: false, is_chargeback: false, is_reversal: false}]}}}}
-      )
-      @connection.should_receive(:request).with(:checkSales).and_return(soap_response)
+      mock_api_method(connection, :checkSales) do
+        {check_sales_response: {check_sales_response: {ok: {sale_status: [{id_sale: "1", status: "NOT_FOUND", is_refund: false, is_chargeback: false, is_reversal: false}, {id_sale: "2772323", status: "PERFORMED", is_refund: false, is_chargeback: false, is_reversal: false}]}}}}
+      end
 
       params = {
         'id_sale_list' => [2772323, 1]
       }
 
-      sales = @api.check_sales(params)[:ok][:sale_status]
+      sales = api.check_sales(params)[:ok][:sale_status]
       sales.should include({id_sale: "1", status: "NOT_FOUND", is_refund: false, is_chargeback: false, is_reversal: false})
       sales.should include({id_sale: "2772323", status: "PERFORMED", is_refund: false, is_chargeback: false, is_reversal: false})
     end
@@ -107,10 +104,9 @@ describe PayLane::API do
 
   describe '#resale' do
     it 'returns id_sale on successful performed recurring charge' do
-      soap_response = double(
-        to_hash: {resale_response: {response: {ok: {id_sale: "2773239"}}}}
-      )
-      @connection.should_receive(:request).with(:resale).and_return(soap_response)
+      mock_api_method(connection, :resale) do
+        {resale_response: {response: {ok: {id_sale: "2773239"}}}}
+      end
 
       params = {
         'id_sale' => '2772323',
@@ -119,7 +115,7 @@ describe PayLane::API do
         'description' => 'paylane_api_test_resale'
       }
 
-      @api.resale(params).should include({ok: {id_sale: "2773239"}})
+      api.resale(params).should include({ok: {id_sale: "2773239"}})
     end
   end
 end
