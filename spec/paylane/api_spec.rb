@@ -37,7 +37,6 @@ describe PayLane::API do
         },
         'amount' => 9.99,
         'currency_code' => "EUR",
-        'processing_date' => "#{Date.today}",
         'product' => {
           'description' => "paylane_api_test"
         }
@@ -103,6 +102,24 @@ describe PayLane::API do
       sales = @api.check_sales(params)[:ok][:sale_status]
       sales.should include({id_sale: "1", status: "NOT_FOUND", is_refund: false, is_chargeback: false, is_reversal: false})
       sales.should include({id_sale: "2772323", status: "PERFORMED", is_refund: false, is_chargeback: false, is_reversal: false})
+    end
+  end
+
+  describe '#resale' do
+    it 'returns id_sale on successful performed recurring charge' do
+      soap_response = double(
+        to_hash: {resale_response: {response: {ok: {id_sale: "2773239"}}}}
+      )
+      @connection.should_receive(:request).with(:resale).and_return(soap_response)
+
+      params = {
+        'id_sale' => '2772323',
+        'amount' => 20.00,
+        'currency' => 'EUR',
+        'description' => 'paylane_api_test_resale'
+      }
+
+      @api.resale(params).should include({ok: {id_sale: "2773239"}})
     end
   end
 end
