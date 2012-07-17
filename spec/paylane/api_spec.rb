@@ -49,8 +49,64 @@ describe PayLane::API do
       pending
     end
 
+    it "returns id_sale_authorization for sales marked by 'capture_late'" do
+      pending
+    end
+
     it "handle errors" do
       pending
+    end
+  end
+
+  describe '#capture_sale' do
+    it "returns id_sale on successful sale authorization" do
+      mock_api_method(connection, :captureSale) do
+        {capture_sale_response: {response: {ok: {id_sale: "2772323"}}}}
+      end
+
+      params = {
+        'id_sale_authorization' => '119225',
+        'amount' => 9.99
+      }
+
+      api.capture_sale(params).should include({ok: {id_sale: "2772323"}})
+    end
+
+    it "handle errors" do
+      pending
+    end
+  end
+
+  describe 'close_sale_authorization' do
+    it "returns id_closed on successful close sale authorization" do
+      mock_api_method(connection, :closeSaleAuthorization) do
+        {close_sale_authorization_response: {response: {ok: {is_closed: true}}}}
+      end
+
+      params = {'id_sale_authorization' => '119225'}
+
+      api.close_sale_authorization(params).should include({ok: {is_closed: true}})
+    end
+
+    it "handle errors" do
+      pending
+    end
+  end
+
+  describe '#resale' do
+    it 'returns id_sale on successful performed recurring charge' do
+      mock_api_method(connection, :resale) do
+        {resale_response: {response: {ok: {id_sale: "2773239"}}}}
+      end
+
+      params = {
+        'id_sale' => '2772323',
+        'amount' => 20.00,
+        'currency' => 'EUR',
+        'description' => 'paylane_api_test_resale'
+      }
+
+      api.resale(params).should include({ok: {id_sale: "2773239"}})
     end
   end
 
@@ -92,30 +148,11 @@ describe PayLane::API do
         {check_sales_response: {check_sales_response: {ok: {sale_status: [{id_sale: "1", status: "NOT_FOUND", is_refund: false, is_chargeback: false, is_reversal: false}, {id_sale: "2772323", status: "PERFORMED", is_refund: false, is_chargeback: false, is_reversal: false}]}}}}
       end
 
-      params = {
-        'id_sale_list' => [2772323, 1]
-      }
+      params = {'id_sale_list' => [2772323, 1]}
 
       sales = api.check_sales(params)[:ok][:sale_status]
       sales.should include({id_sale: "1", status: "NOT_FOUND", is_refund: false, is_chargeback: false, is_reversal: false})
       sales.should include({id_sale: "2772323", status: "PERFORMED", is_refund: false, is_chargeback: false, is_reversal: false})
-    end
-  end
-
-  describe '#resale' do
-    it 'returns id_sale on successful performed recurring charge' do
-      mock_api_method(connection, :resale) do
-        {resale_response: {response: {ok: {id_sale: "2773239"}}}}
-      end
-
-      params = {
-        'id_sale' => '2772323',
-        'amount' => 20.00,
-        'currency' => 'EUR',
-        'description' => 'paylane_api_test_resale'
-      }
-
-      api.resale(params).should include({ok: {id_sale: "2773239"}})
     end
   end
 end
