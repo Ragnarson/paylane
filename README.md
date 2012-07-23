@@ -1,20 +1,12 @@
 # Paylane
 
-TODO: Write a gem description
+Ruby client for [PayLane](http://paylane.com) service.
 
 ## Installation
 
-Add this line to your application's Gemfile:
+** It's strongly recommended to NOT install current version - development in progress **
 
-    gem 'paylane'
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install paylane
+TODO: Write installation instructions here
 
 ## Usage
 
@@ -27,3 +19,4 @@ TODO: Write usage instructions here
 3. Commit your changes (`git commit -am 'Added some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create new Pull Request
+
