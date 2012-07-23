@@ -4,7 +4,7 @@ Ruby client for [PayLane](http://paylane.com) service.
 
 ## Installation
 
-** It's strongly recommended to NOT install current version - development in progress **
+**It's strongly recommended to NOT install current version - development in progress**
 
 TODO: Write installation instructions here
 
