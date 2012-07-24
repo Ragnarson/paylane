@@ -4,8 +4,8 @@ require File.expand_path('../lib/paylane/version', __FILE__)
 Gem::Specification.new do |gem|
   gem.authors       = ["Bartlomiej Kozal"]
   gem.email         = ["bkzl@me.com"]
-  gem.description   = %q{TODO: Write a gem description}
-  gem.summary       = %q{TODO: Write a gem summary}
+  gem.description   = %q{Ruby client for PayLane service.}
+  gem.summary       = %q{Ruby client for PayLane service.}
   gem.homepage      = ""
 
   gem.files         = `git ls-files`.split($\)
@@ -19,4 +19,6 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency "rake"
   gem.add_development_dependency "rspec"
   gem.add_development_dependency "fakeweb"
+
+  gem.post_install_message = "**It's strongly recommended to NOT install current version - development in progress**"
 end
