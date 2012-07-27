@@ -37,7 +37,7 @@ module PayLane
     def do_request(method, params, params_prefix = nil)
       body = params_prefix ? {params_prefix => params} : params
       soap_response = @client.request(method) { soap.body = body }
-      soap_response.to_hash
+      PayLane::Response.new(soap_response.to_hash)
     end
   end
 end
