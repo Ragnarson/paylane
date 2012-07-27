@@ -52,10 +52,6 @@ describe PayLane::API do
     it "returns id_sale_authorization for sales marked by 'capture_late'" do
       pending
     end
-
-    it "handle errors" do
-      pending
-    end
   end
 
   describe '#capture_sale' do
@@ -71,10 +67,6 @@ describe PayLane::API do
 
       api.capture_sale(params).should include({ok: {id_sale: "2772323"}})
     end
-
-    it "handle errors" do
-      pending
-    end
   end
 
   describe 'close_sale_authorization' do
@@ -86,10 +78,6 @@ describe PayLane::API do
       params = {'id_sale_authorization' => '119225'}
 
       api.close_sale_authorization(params).should include({ok: {is_closed: true}})
-    end
-
-    it "handle errors" do
-      pending
     end
   end
 
@@ -151,10 +139,6 @@ describe PayLane::API do
       }
 
       api.get_sale_result(params).should include({ok: {id_sale_error: "831072"}})
-    end
-
-    it "handle errors" do
-      pending
     end
   end
 
