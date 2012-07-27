@@ -36,6 +36,10 @@ describe PayLane::Customer do
         'product' => {'description' => "nazwa appki + timestamp" }}
     end
 
+    before do
+      PayLane.stub_chain(:logger, :info)
+    end
+
     it 'includes in product description app name and timestamp' do
       pending
     end
@@ -45,6 +49,11 @@ describe PayLane::Customer do
     end
 
     describe '#charge_card' do
+      let(:customer) do
+        PayLane::Customer.new(card_number: 4111111111111111, card_code: 123,
+          expiration_month: 12, expiration_year: 2020, name_on_card: 'John Smith')
+      end
+
       it 'charges credit card by specific amount' do
         expected_params = params.merge(
           'payment_method' => {
@@ -55,19 +64,17 @@ describe PayLane::Customer do
               'expiration_year' => 2020,
               'name_on_card' => 'John Smith'
           }})
-        c = customer.new(card_number: 4111111111111111, card_code: 123,
-                         expiration_month: 12, expiration_year: 2020,
-                         name_on_card: 'John Smith')
         api.any_instance.should_receive(:multi_sale).with(expected_params)
-        c.charge_card(10.00)
-      end
-
-      it 'saves result of request in Rails logs' do
-        pending
+        customer.charge_card(10.00)
       end
     end
 
     describe '#direct_debit' do
+      let(:customer) do
+        PayLane::Customer.new(account_country: 'DE', bank_code: 12345678,
+          account_number: 1234567890, account_holder: 'John Smith')
+      end
+
       it 'charges account by specific amount' do
         expected_params = params.merge(
           'payment_method' => {
@@ -77,14 +84,8 @@ describe PayLane::Customer do
               'account_number' => 1234567890,
               'account_holder' => 'John Smith'
           }})
-        c = customer.new(account_country: 'DE', bank_code: 12345678,
-                         account_number: 1234567890, account_holder: 'John Smith')
         api.any_instance.should_receive(:multi_sale).with(expected_params)
-        c.direct_debit(10.00)
-      end
-
-      it 'saves result of request in Rails logs' do
-        pending
+        customer.direct_debit(10.00)
       end
     end
   end
