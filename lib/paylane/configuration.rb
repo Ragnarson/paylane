@@ -1,7 +1,7 @@
 module PayLane
   class Configuration
     class << self
-      attr_accessor :currency, :login, :password
+      attr_accessor :currency, :login, :password, :adapter
 
       def currency
         "EUR"
