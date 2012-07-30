@@ -16,14 +16,14 @@ module PayLane
     def charge_card(amount)
       @amount = amount
       response = @api.multi_sale(params.merge('payment_method' => {'card_data' => card_data}))
-      PayLane.logger.info("PayLane: #{response}")
+      PayLane.logger.info("[PayLane] #{response}")
       response
     end
 
     def direct_debit(amount)
       @amount = amount
       response = @api.multi_sale(params.merge('payment_method' => {'account_data' => account_data}))
-      PayLane.logger.info("PayLane: #{response}")
+      PayLane.logger.info("[PayLane] #{response}")
       response
     end
 
