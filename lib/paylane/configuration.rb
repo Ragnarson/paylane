@@ -4,7 +4,7 @@ module PayLane
       attr_accessor :currency, :login, :password
 
       def currency
-        'EUR'
+        "EUR"
       end
 
       def login
