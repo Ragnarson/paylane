@@ -8,21 +8,8 @@ describe PayLane::API do
   let(:api) { PayLane::API.new(connection) }
 
   describe '#multi_sale' do
-    it "returns id_sale on successful card charge" do
-      mock_api_method(connection, :multiSale) do
-        {multi_sale_response: {response: {ok: {id_sale: "2772323"}, data: {fraud_score: "8.76"}}}}
-      end
-
+    let(:params) do
       params = {
-        'payment_method' => {
-          'card_data' => {
-            'card_number' => 4111111111111111,
-            'card_code' => 123,
-            'expiration_month' => 12,
-            'expiration_year' => 2020,
-            'name_on_card' => 'John Smith'
-          }
-        },
         'customer' => {
           'name' => 'John Smith',
           'email' => 'johnsmith@example.com',
@@ -39,18 +26,63 @@ describe PayLane::API do
         'currency_code' => "EUR",
         'product' => {
           'description' => "paylane_api_test"
-        }
-      }
+      }}
+    end
+
+    it "returns id_sale on successful card charge" do
+      mock_api_method(connection, :multiSale) do
+        {multi_sale_response: {response: {ok: {id_sale: "2772323"}, data: {fraud_score: "8.76"}}}}
+      end
+
+      params.merge({
+        'payment_method' => {
+          'card_data' => {
+            'card_number' => 4111111111111111,
+            'card_code' => 123,
+            'expiration_month' => 12,
+            'expiration_year' => 2020,
+            'name_on_card' => 'John Smith'
+      }}})
 
       api.multi_sale(params).should include({ok: {id_sale: "2772323"}})
     end
 
     it "returns id_sale on successful direct debit" do
-      pending
+      mock_api_method(connection, :multiSale) do
+        {multi_sale_response: {response: {ok: {id_sale: "2772323"}, data: {fraud_score: "8.76"}}}}
+      end
+
+      params.merge({
+        'payment_method' => {
+          'card_data' => {
+            'account_country' => 'DE',
+            'bank_code' => 12345678,
+            'account_number' => 12345678901,
+            'account_holder' => 'John Smith'
+      }}})
+
+      api.multi_sale(params).should include({ok: {id_sale: "2772323"}})
     end
 
-    it "returns id_sale_authorization for sales marked by 'capture_late'" do
-      pending
+    it "returns id_sale_authorization for sales marked by 'capture_later'" do
+      mock_api_method(connection, :multiSale) do
+        {multi_sale_response: {response: {ok: {id_sale_authorization: "2772323"}, data: {fraud_score: "8.76"}}}}
+      end
+
+      params.merge({
+        'payment_method' => {
+          'card_data' => {
+            'card_number' => 4111111111111111,
+            'card_code' => 123,
+            'expiration_month' => 12,
+            'expiration_year' => 2020,
+            'name_on_card' => 'John Smith'
+          }
+        },
+        'capture_later' => true
+      })
+
+      api.multi_sale(params).should include({ok: {id_sale_authorization: "2772323"}})
     end
   end
 
