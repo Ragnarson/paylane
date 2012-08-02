@@ -1,15 +1,23 @@
 module PayLane
   class Response
     def initialize(soap_response_hash)
-      @soap_response_hash = soap_response_hash
+      @response = soap_response_hash
     end
 
     def [](key)
-      @soap_response_hash[key]
+      @response[key]
     end
 
     def success?
-      !@soap_response_hash[:ok].nil?
+      !@response[:ok].nil?
+    end
+
+    def error?
+      !success?
+    end
+
+    def error_description
+       @response[:error][:error_description] if error?
     end
   end
 end
