@@ -8,16 +8,16 @@ module PayLane
       @response[key]
     end
 
-    def success?
+    def has_ok?
       !@response[:ok].nil?
     end
 
-    def error?
-      !success?
+    def has_error?
+      !has_ok?
     end
 
     def error_description
-       @response[:error][:error_description] if error?
+       @response[:error][:error_description] if has_error?
     end
   end
 end

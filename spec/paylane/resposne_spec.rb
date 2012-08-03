@@ -6,21 +6,21 @@ describe PayLane::Response do
 
   describe '#success?' do
     it "returns true if response has :ok key" do
-      ok_response.success?.should be_true
+      ok_response.has_ok?.should be_true
     end
 
     it "returns false if resposne hasn't :ok key" do
-      error_response.success?.should be_false
+      error_response.has_ok?.should be_false
     end
   end
 
   describe '#error?' do
     it "returns true if response has :error key" do
-      error_response.error?.should be_true
+      error_response.has_error?.should be_true
     end
 
     it "returns false if resposne hasn't :error key" do
-      ok_response.error?.should be_false
+      ok_response.has_error?.should be_false
     end
   end
 
