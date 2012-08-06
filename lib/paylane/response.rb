@@ -28,5 +28,9 @@ module PayLane
       hash = (@response[:ok] || @response[:error])
       has_data? ? hash.merge(@response[:data]) : hash
     end
+
+    def to_s
+      @response.to_s
+    end
   end
 end
