@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-describe PayLane::Adapter do
+describe PayLane::Payment do
   let(:api) { PayLane::API }
-  let(:adapter) { PayLane::Adapter.new }
+  let(:adapter) { PayLane::Payment.new }
 
   describe 'payment method' do
     let(:params) do
