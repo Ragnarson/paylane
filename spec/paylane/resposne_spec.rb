@@ -2,7 +2,9 @@ require 'spec_helper'
 
 describe PayLane::Response do
   context 'has :ok and :data hashes' do
-    let(:response) { PayLane::Response.new(ok: {sale_id: 1}, data: {fraud_score: 1.0}) }
+    let(:response) do
+      PayLane::Response.new { {ok: {sale_id: 1}, data: {fraud_score: 1.0}} }
+    end
 
     it "returns true on #has_ok?" do
       response.has_ok?.should be_true
@@ -23,7 +25,7 @@ describe PayLane::Response do
 
   context 'has :error hash' do
     let(:response) do
-      PayLane::Response.new(error: {error_description: 'Something went wrong'})
+      PayLane::Response.new { {error: {error_description: 'Something went wrong'}} }
     end
 
     it "returns false on #has_ok?" do

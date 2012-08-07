@@ -1,7 +1,7 @@
 module PayLane
   class Response < Hash
-    def initialize(soap_response_hash)
-      @response = soap_response_hash
+    def initialize
+      @response = yield
     end
 
     def [](key)
