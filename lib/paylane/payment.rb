@@ -1,7 +1,7 @@
 module PayLane
   class Payment
     def initialize(options = {})
-      gateway = PayLane::Gateway.new(PayLane::Configuration.login, PayLane::Configuration.password)
+      gateway = PayLane::Gateway.new(PayLane.login, PayLane.password)
       @api = PayLane::API.new(gateway.connect)
       @options = options
     end
@@ -29,7 +29,7 @@ module PayLane
       {
         'customer' => customer,
         'amount' => @amount,
-        'currency_code' => PayLane::Configuration.currency,
+        'currency_code' => PayLane.currency,
         'processing_date' => "#{Date.today}",
         'product' => {
           'description' => "[#{@options[:product]}][#{Time.now.getutc}]"

@@ -3,16 +3,16 @@ require "paylane/version"
 require "paylane/gateway"
 require "paylane/api"
 require "paylane/response"
-require "paylane/configuration"
-require "paylane/adapter"
+require "paylane/payment"
 require "paylane/railtie" if defined?(Rails)
 
 module PayLane
-  def self.logger
-    @logger ||= Logger.new(STDOUT)
+  class << self
+    attr_accessor :currency, :login, :password, :logger
   end
 
-  def self.logger=(logger)
-    @logger = logger
-  end
+  self.currency = "EUR"
+  self.login = "paylane_test_public"
+  self.password = "p2y12n3t3st"
+  self.logger = Logger.new(STDOUT)
 end
