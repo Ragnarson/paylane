@@ -12,7 +12,5 @@ module PayLane
   end
 
   self.currency = "EUR"
-  self.login = "paylane_test_public"
-  self.password = "p2y12n3t3st"
   self.logger = Logger.new(STDOUT)
 end

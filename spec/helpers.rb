@@ -1,6 +1,6 @@
 module PublicTestAccount
-  LOGIN = 'paylane_test_public'
-  PASSWORD = 'p2y12n3t3st'
+  LOGIN = 'test'
+  PASSWORD = 'test'
 end
 
 module Helpers
