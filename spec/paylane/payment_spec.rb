@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe PayLane::Payment do
   let(:api) { PayLane::API }
-  let(:adapter) { PayLane::Payment.new }
+  let(:payment) { PayLane::Payment.new }
 
   describe 'payment method' do
     let(:params) do
@@ -26,7 +26,7 @@ describe PayLane::Payment do
       it 'charges credit card by specific amount' do
         expected_params = params.merge('payment_method' => {'card_data' => {}})
         api.any_instance.should_receive(:multi_sale).with(expected_params)
-        adapter.charge_card(10.00)
+        payment.charge_card(10.00)
       end
     end
 
@@ -34,7 +34,7 @@ describe PayLane::Payment do
       it 'charges account by specific amount' do
         expected_params = params.merge('payment_method' => {'account_data' => {}})
         api.any_instance.should_receive(:multi_sale).with(expected_params)
-        adapter.direct_debit(10.00)
+        payment.direct_debit(10.00)
       end
     end
   end
