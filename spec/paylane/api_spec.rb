@@ -187,5 +187,17 @@ describe PayLane::API do
       sales.should include({id_sale: "2772323", status: "PERFORMED", is_refund: false, is_chargeback: false, is_reversal: false})
     end
   end
+
+  describe 'handle savon error' do
+    let(:savon_http_error) {
+      Savon::HTTP::Error.new(double(error?: true, code: 404, body: 'Not Found'))
+    }
+
+    it 'logs error and re-raise' do
+      connection.stub(:request).and_raise(savon_http_error)
+      PayLane.logger.should_receive(:error).with("[PayLane][Savon] HTTP error (404): Not Found")
+      expect { api.multi_sale({}) }.to raise_error(savon_http_error)
+    end
+  end
 end
 

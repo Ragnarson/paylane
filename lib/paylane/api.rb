@@ -49,9 +49,14 @@ module PayLane
     private
 
     def request(method, params, params_prefix = nil)
-      body = params_prefix ? {params_prefix => params} : params
-      soap_response = @client.request(method) { soap.body = body }
-      soap_response.to_hash
+      begin
+        body = params_prefix ? {params_prefix => params} : params
+        soap_response = @client.request(method) { soap.body = body }
+        soap_response.to_hash
+      rescue Savon::Error => e
+        PayLane.logger.error("[PayLane][Savon] #{e}")
+        raise e
+      end
     end
   end
 end
