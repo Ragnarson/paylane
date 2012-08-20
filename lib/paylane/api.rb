@@ -1,3 +1,5 @@
+require "paylane/response"
+
 module PayLane
   class API
     def initialize(client)
