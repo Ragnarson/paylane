@@ -1,4 +1,5 @@
 require "paylane/response"
+require "paylane/connection_error"
 
 module PayLane
   class API
@@ -56,8 +57,9 @@ module PayLane
         soap_response = @client.request(method) { soap.body = body }
         soap_response.to_hash
       rescue Savon::Error => e
-        PayLane.logger.error("[PayLane][Savon] #{e}")
-        raise e
+        err = PayLane::ConnectionError.new(e)
+        PayLane.logger.error("[PayLane][Savon] #{err}")
+        raise err
       end
     end
   end
