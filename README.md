@@ -54,7 +54,7 @@ If something went wrong `PayLane::ConnectionError` error will be raised.
 
 ## Usage - custom methods
 
-Gem provides custom methods to simplify an implementation of payments in your app.
+Gem provides custom methods to simplify implementation of payments in your app.
 
 ### Configuration
 
