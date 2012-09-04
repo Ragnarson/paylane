@@ -58,7 +58,7 @@ module PayLane
         soap_response.to_hash
       rescue Savon::Error => e
         err = PayLane::ConnectionError.new(e)
-        PayLane.logger.error("[PayLane][Savon] #{err}")
+        PayLane.logger.error("[PayLane][Savon] #{err.to_hash}")
         raise err
       end
     end

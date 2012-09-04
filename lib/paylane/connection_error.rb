@@ -6,8 +6,8 @@ module PayLane
       @soap_error = soap_error
     end
 
-    def to_s
-      @soap_error.to_s
+    def to_hash
+      @soap_error.to_hash
     end
   end
 end
