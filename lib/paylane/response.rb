@@ -1,7 +1,7 @@
 module PayLane
   class Response < Hash
-    def initialize
-      @response = yield
+    def initialize(response)
+      @response = response
     end
 
     def [](key)
