@@ -15,10 +15,8 @@ Gem::Specification.new do |gem|
   gem.require_paths = ["lib"]
   gem.version       = PayLane::VERSION
 
-  gem.add_dependency "savon"
+  gem.add_dependency "savon", "1.2.0"
   gem.add_development_dependency "rake"
   gem.add_development_dependency "rspec"
   gem.add_development_dependency "fakeweb"
-
-  gem.post_install_message = "**It's strongly recommended to NOT install current version - development in progress**"
 end
