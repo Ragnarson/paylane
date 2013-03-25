@@ -14,7 +14,7 @@ or
 
 Start from create a client for API.
 
-    gateway = PayLane::Gateway.new('login, 'password')
+    gateway = PayLane::Gateway.new('login', 'password')
     client = PayLane::API.new(gateway.connect)
 
 Now all methods from [original API](http://devzone.paylane.com/wp-content/uploads/2012/05/paylane_direct_system.pdf) are available in the client object.
