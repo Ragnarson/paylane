@@ -1,4 +1,4 @@
-# Paylane
+# Paylane [![Build Status](https://travis-ci.org/shellycloud/paylane.png)](https://travis-ci.org/shellycloud/paylane) [![Code Climate](https://codeclimate.com/github/shellycloud/paylane.png)](https://codeclimate.com/github/shellycloud/paylane)
 
 Ruby client for [PayLane](http://www.paylane.com) payments.
 
