@@ -1,15 +1,13 @@
 module PayLane
   class Response < Hash
-    def initialize(response)
-      @response = response
-    end
+    attr_reader :body
 
-    def [](key)
-      @response[key]
+    def initialize(body)
+      @body = body
     end
 
     def has_ok?
-      @response.include?(:ok)
+      @body.include?(:ok)
     end
 
     def has_error?
@@ -17,20 +15,16 @@ module PayLane
     end
 
     def has_data?
-      @response.include?(:data)
+      @body.include?(:data)
     end
 
     def error_description
-       @response[:error][:error_description] if has_error?
+       @body[:error][:error_description] if has_error?
     end
 
     def attributes
-      hash = (@response[:ok] || @response[:error])
-      has_data? ? hash.merge(@response[:data]) : hash
-    end
-
-    def to_s
-      @response.to_s
+      hash = (@body[:ok] || @body[:error])
+      has_data? ? hash.merge(@body[:data]) : hash
     end
   end
 end

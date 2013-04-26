@@ -8,42 +8,49 @@ module PayLane
     end
 
     def multi_sale(params)
-      request(:multiSale, params, 'multi_sale_params')[:multi_sale_response][:response]
+      response = request(:multiSale, params, 'multi_sale_params')
+      Response.new(response[:multi_sale_response][:response])
     end
 
     def capture_sale(params)
-      request(:captureSale, params)[:capture_sale_response][:response]
+      response = request(:captureSale, params)
+      Response.new(response[:capture_sale_response][:response])
     end
 
     def close_sale_authorization(params)
-      request(:closeSaleAuthorization, params)[:close_sale_authorization_response][:response]
+      response = request(:closeSaleAuthorization, params)
+      Response.new(response[:close_sale_authorization_response][:response])
     end
 
     def refund(params)
-      request(:refund, params)[:refund_response][:response]
+      response = request(:refund, params)
+      Response.new(response[:refund_response][:response])
     end
 
     def resale(params)
-      request(:resale, params)[:resale_response][:response]
+      response = request(:resale, params)
+      Response.new(response[:resale_response][:response])
     end
 
     def get_sale_result(params)
-      request(:getSaleResult, params)[:get_sale_result_response][:response]
+      response = request(:getSaleResult, params)
+      Response.new(response[:get_sale_result_response][:response])
     end
 
     def check_sales(params)
-      request(:checkSales, params, 'check_sales_params')[:check_sales_response][:check_sales_response]
+      response = request(:checkSales, params, 'check_sales_params')
+      Response.new(response[:check_sales_response][:check_sales_response])
     end
 
     private
 
     def request(method, params, params_prefix = nil)
       begin
-        body = params_prefix ? {params_prefix => params} : params
-        soap_response = @client.request(method) { soap.body = body }
-        PayLane::Response.new(soap_response.to_hash)
+        @client.request(method) do
+          soap.body = (params_prefix ? {params_prefix => params} : params)
+        end.to_hash
       rescue Savon::Error => e
-        err = PayLane::ConnectionError.new(e)
+        err = ConnectionError.new(e)
         PayLane.logger.error("[PayLane][Savon] #{err.to_hash}")
         raise err
       end

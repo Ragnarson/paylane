@@ -1,8 +1,8 @@
 module PayLane
   class Payment
     def initialize(options = {})
-      gateway = PayLane::Gateway.new(PayLane.login, PayLane.password)
-      @api = PayLane::API.new(gateway.connect)
+      gateway = Gateway.new(PayLane.login, PayLane.password)
+      @api = API.new(gateway.connect)
       @options = options
     end
 

@@ -1,10 +1,10 @@
 require 'spec_helper'
 
 describe PayLane::API do
-  let(:connection) {
+  let(:connection) do
     gateway = PayLane::Gateway.new(PublicTestAccount::LOGIN, PublicTestAccount::PASSWORD)
     gateway.connect
-  }
+  end
   let(:api) { PayLane::API.new(connection) }
 
   describe '#multi_sale' do
@@ -31,7 +31,8 @@ describe PayLane::API do
 
     it "returns id_sale on successful card charge" do
       mock_api_method(connection, :multiSale) do
-        {multi_sale_response: {response: {ok: {id_sale: "2772323"}, data: {fraud_score: "8.76"}}}}
+        {multi_sale_response: {response: {ok: {id_sale: "2772323"},
+                                          data: {fraud_score: "8.76"}}}}
       end
 
       params.merge({
@@ -44,12 +45,13 @@ describe PayLane::API do
             'name_on_card' => 'John Smith'
       }}})
 
-      api.multi_sale(params).should include({ok: {id_sale: "2772323"}})
+      api.multi_sale(params).body.should include({ok: {id_sale: "2772323"}})
     end
 
     it "returns id_sale on successful direct debit" do
       mock_api_method(connection, :multiSale) do
-        {multi_sale_response: {response: {ok: {id_sale: "2772323"}, data: {fraud_score: "8.76"}}}}
+        {multi_sale_response: {response: {ok: {id_sale: "2772323"},
+                                          data: {fraud_score: "8.76"}}}}
       end
 
       params.merge({
@@ -61,12 +63,13 @@ describe PayLane::API do
             'account_holder' => 'John Smith'
       }}})
 
-      api.multi_sale(params).should include({ok: {id_sale: "2772323"}})
+      api.multi_sale(params).body.should include({ok: {id_sale: "2772323"}})
     end
 
     it "returns id_sale_authorization for sales marked by 'capture_later'" do
       mock_api_method(connection, :multiSale) do
-        {multi_sale_response: {response: {ok: {id_sale_authorization: "2772323"}, data: {fraud_score: "8.76"}}}}
+        {multi_sale_response: {response: {ok: {id_sale_authorization: "2772323"},
+                                          data: {fraud_score: "8.76"}}}}
       end
 
       params.merge({
@@ -82,7 +85,16 @@ describe PayLane::API do
         'capture_later' => true
       })
 
-      api.multi_sale(params).should include({ok: {id_sale_authorization: "2772323"}})
+      api.multi_sale(params).body.should include({ok: {id_sale_authorization: "2772323"}})
+    end
+
+    it "returns instance of PayLane::Response class" do
+      mock_api_method(connection, :multiSale) do
+        {multi_sale_response: {response: {ok: {id_sale: "2772323"},
+                                          data: {fraud_score: "8.76"}}}}
+      end
+
+      api.multi_sale(params).class.should == PayLane::Response
     end
   end
 
@@ -97,7 +109,7 @@ describe PayLane::API do
         'amount' => 9.99
       }
 
-      api.capture_sale(params).should include({ok: {id_sale: "2772323"}})
+      api.capture_sale(params).body.should include({ok: {id_sale: "2772323"}})
     end
   end
 
@@ -109,7 +121,7 @@ describe PayLane::API do
 
       params = {'id_sale_authorization' => '119225'}
 
-      api.close_sale_authorization(params).should include({ok: {is_closed: true}})
+      api.close_sale_authorization(params).body.should include({ok: {is_closed: true}})
     end
   end
 
@@ -125,7 +137,7 @@ describe PayLane::API do
         'reason' => 'test_refund_method'
       }
 
-      api.refund(params).should include({ok: {id_refund: "213871"}})
+      api.refund(params).body.should include({ok: {id_refund: "213871"}})
     end
   end
 
@@ -142,7 +154,7 @@ describe PayLane::API do
         'description' => 'paylane_api_test_resale'
       }
 
-      api.resale(params).should include({ok: {id_sale: "2773239"}})
+      api.resale(params).body.should include({ok: {id_sale: "2773239"}})
     end
   end
 
@@ -157,7 +169,7 @@ describe PayLane::API do
         'description' => 'paylane_api_test'
       }
 
-      api.get_sale_result(params).should include({ok: {id_sale: "2772323"}})
+      api.get_sale_result(params).body.should include({ok: {id_sale: "2772323"}})
     end
 
     it "returns id_sale_error if find processed sale with error" do
@@ -170,21 +182,30 @@ describe PayLane::API do
         'description' => 'paylane_api_test'
       }
 
-      api.get_sale_result(params).should include({ok: {id_sale_error: "831072"}})
+      api.get_sale_result(params).body.should include({ok: {id_sale_error: "831072"}})
     end
   end
 
   describe '#check_sales' do
     it 'returns details for requested sale ids' do
       mock_api_method(connection, :checkSales) do
-        {check_sales_response: {check_sales_response: {ok: {sale_status: [{id_sale: "1", status: "NOT_FOUND", is_refund: false, is_chargeback: false, is_reversal: false}, {id_sale: "2772323", status: "PERFORMED", is_refund: false, is_chargeback: false, is_reversal: false}]}}}}
+        {check_sales_response: {check_sales_response: {ok: {sale_status: [
+          {id_sale: "1", status: "NOT_FOUND", is_refund: false,
+           is_chargeback: false, is_reversal: false}, 
+          {id_sale: "2772323", status: "PERFORMED", is_refund: false,
+           is_chargeback: false, is_reversal: false}
+        ]}}}}
       end
 
       params = {'id_sale_list' => [2772323, 1]}
 
-      sales = api.check_sales(params)[:ok][:sale_status]
-      sales.should include({id_sale: "1", status: "NOT_FOUND", is_refund: false, is_chargeback: false, is_reversal: false})
-      sales.should include({id_sale: "2772323", status: "PERFORMED", is_refund: false, is_chargeback: false, is_reversal: false})
+      sales = api.check_sales(params).body[:ok][:sale_status]
+      sales.should include({id_sale: "1", status: "NOT_FOUND",
+                            is_refund: false, is_chargeback: false,
+                            is_reversal: false})
+      sales.should include({id_sale: "2772323", status: "PERFORMED",
+                            is_refund: false, is_chargeback: false,
+                            is_reversal: false})
     end
   end
 end

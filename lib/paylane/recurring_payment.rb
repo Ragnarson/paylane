@@ -1,8 +1,8 @@
 module PayLane
   class RecurringPayment
     def initialize(previous_sale_id, options = {})
-      gateway = PayLane::Gateway.new(PayLane.login, PayLane.password)
-      @api = PayLane::API.new(gateway.connect)
+      gateway = Gateway.new(PayLane.login, PayLane.password)
+      @api = API.new(gateway.connect)
       @previous_sale_id = previous_sale_id
       @options = options
     end
