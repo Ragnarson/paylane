@@ -12,14 +12,15 @@ describe PayLane::Payment do
         'currency_code' => 'EUR',
         'processing_date' => "#{Date.today}",
         'product' => {
-          'description' => '[][2012-11-30 06:30:00 UTC]'
+          'description' => '[2012-11-30 06:30:00 UTC]'
         }
       }
     end
 
     before do
       PayLane.stub_chain(:logger, :info)
-      Time.stub_chain(:now, :getutc).and_return(Time.utc(2012, 11, 30, 6, 30))
+      PayLane::Product.stub_chain(:new, :description).
+        and_return('[2012-11-30 06:30:00 UTC]')
     end
 
     describe '#charge_card' do

@@ -2,6 +2,7 @@ require "savon"
 require "paylane/version"
 require "paylane/gateway"
 require "paylane/api"
+require "paylane/product"
 require "paylane/payment"
 require "paylane/recurring_payment"
 require "paylane/railtie" if defined?(Rails)

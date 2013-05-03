@@ -4,6 +4,7 @@ module PayLane
       gateway = Gateway.new(PayLane.login, PayLane.password)
       @api = API.new(gateway.connect)
       @options = options
+      @product = Product.new @options[:product]
     end
 
     def charge_card(amount)
@@ -12,15 +13,6 @@ module PayLane
 
     def direct_debit(amount)
       do_payment(amount, {'account_data' => account_data})
-    end
-
-    private
-
-    def do_payment(amount, payment_method)
-      @amount = amount
-      response = @api.multi_sale(params.merge('payment_method' => payment_method))
-      PayLane.logger.info("[PayLane] #{response}")
-      response
     end
 
     protected
@@ -32,7 +24,7 @@ module PayLane
         'currency_code' => PayLane.currency,
         'processing_date' => "#{Date.today}",
         'product' => {
-          'description' => "[#{@options[:product]}][#{Time.now.getutc}]"
+          'description' => @product.description
         }
       }
     end
@@ -47,6 +39,15 @@ module PayLane
 
     def customer
       {}
+    end
+
+    private
+
+    def do_payment(amount, payment_method)
+      @amount = amount
+      response = @api.multi_sale(params.merge('payment_method' => payment_method))
+      PayLane.logger.info("[PayLane] #{response}")
+      response
     end
   end
 end

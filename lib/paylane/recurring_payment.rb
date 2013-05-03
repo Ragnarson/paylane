@@ -5,6 +5,7 @@ module PayLane
       @api = API.new(gateway.connect)
       @previous_sale_id = previous_sale_id
       @options = options
+      @product = Product.new @options[:product]
     end
 
     def charge_card(amount)
@@ -21,7 +22,7 @@ module PayLane
         'id_sale' => @previous_sale_id,
         'amount' => @amount,
         'currency' => PayLane.currency,
-        'description' => "[#{@options[:product]}][#{Time.now.getutc}]"
+        'description' => @product.description
       }
     end
   end
